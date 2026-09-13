@@ -16,6 +16,13 @@ in PostgreSQL, artifacts in S3. You can destroy every pod and both survive.
   top of this stack, so each run records which dataset version it trained on.
 - **UI guide (Chinese):** [MLFLOW_UI_使用指南.md](MLFLOW_UI_使用指南.md) — how to read and use
   the MLflow web interface, and how the three documents fit together.
+- **Chinese translation:** this runbook split in two —
+  [搭建篇](MLFLOW_生产部署_搭建篇.md) (setup, §1–7 + troubleshooting) and
+  [测试篇](MLFLOW_生产部署_测试篇.md) (test cases + cleanup). The Chinese version also
+  carries three corrections found while actually running this plan: the pod must use
+  Floci's **kind-network** address (not the bridge IP), `memory: 1Gi` gets OOMKilled
+  (use 3Gi), and `artifact_location` holds a `mlflow-artifacts:/` proxy URI rather than
+  `s3://`.
 
 > ### ⚠️ Read this before you start
 >

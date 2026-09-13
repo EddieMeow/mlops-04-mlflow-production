@@ -587,7 +587,9 @@ flowchart LR
 
 | 文档 | 解决什么问题 | 什么时候看 |
 | --- | --- | --- |
-| [MLFLOW_PRODUCTION_PLAN.md](MLFLOW_PRODUCTION_PLAN.md) | 服务怎么跑起来、state 存哪 | 搭环境、排查 Pod 故障 |
+| [搭建篇（中文）](MLFLOW_生产部署_搭建篇.md) | 服务怎么跑起来、state 存哪 | 搭环境、排查 Pod 故障 |
+| [测试篇（中文）](MLFLOW_生产部署_测试篇.md) | 怎么验证状态存活 | 搭完后做验证 |
+| [MLFLOW_PRODUCTION_PLAN.md](MLFLOW_PRODUCTION_PLAN.md) | 以上两篇的英文原版 | 需要英文版时 |
 | [DVC_DATA_VERSIONING_PLAN.md](DVC_DATA_VERSIONING_PLAN.md) | 数据版本怎么管、怎么关联到 Run | 要做可复现实验时 |
 | 本文档 | 界面怎么用、怎么追溯 | 日常看结果、调参、上线 |
 
