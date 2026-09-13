@@ -19,4 +19,4 @@ for n in (10, 50, 100):
         mlflow.sklearn.log_model(model, name="model")
         print(f"n_estimators={n:3d}  accuracy={acc:.4f}")
 
-print("\n✅ Test A passed — open http://localhost:5000")
+print("\n完成")

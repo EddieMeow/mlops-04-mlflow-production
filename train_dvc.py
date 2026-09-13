@@ -13,7 +13,7 @@ DATA = Path("data/wine_sample.csv")
 
 
 def dvc_md5():
-    """读取 DVC 为该数据集记录的 md5"""
+    """DVC 记录的 md5（数据应该是什么样）"""
     pointer = Path(str(DATA) + ".dvc")
     if not pointer.exists():
         return None
@@ -21,7 +21,7 @@ def dvc_md5():
 
 
 def file_md5():
-    """计算磁盘上文件的实际 md5"""
+    """磁盘上的实际 md5（数据现在是什么样）"""
     return hashlib.md5(DATA.read_bytes()).hexdigest()
 
 
@@ -46,7 +46,7 @@ with mlflow.start_run() as run:
     model = RandomForestRegressor(n_estimators=50, random_state=42).fit(X_tr, y_tr)
     rmse = mean_squared_error(y_te, model.predict(X_te)) ** 0.5
 
-    # --- 数据血缘记录 ---
+    # --- 关键：记录数据血缘 ---
     mlflow.log_param("data_md5", tracked)
     mlflow.log_param("data_rows", len(df))
     mlflow.set_tag("git_commit", git_rev())
