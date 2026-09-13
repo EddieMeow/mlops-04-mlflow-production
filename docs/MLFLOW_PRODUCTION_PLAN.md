@@ -12,6 +12,8 @@ in PostgreSQL, artifacts in S3. You can destroy every pod and both survive.
 - **Time:** ~15 minutes. Floci provisions RDS instantly, so there is no 10-minute wait.
 - **Cost:** $0.
 - **Interface:** the ordinary `aws` CLI throughout. Only `AWS_ENDPOINT_URL` differs from real AWS.
+- **Next:** [DVC_DATA_VERSIONING_PLAN.md](DVC_DATA_VERSIONING_PLAN.md) adds data versioning on
+  top of this stack, so each run records which dataset version it trained on.
 
 > ### ⚠️ Read this before you start
 >
