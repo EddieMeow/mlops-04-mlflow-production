@@ -190,8 +190,32 @@ psql -h 127.0.0.1 -p 15432 -U $MASTER_USER -d mlflow -t \
 uv add mlflow scikit-learn
 ```
 
-> 💡 **后面统一用 `.venv/bin/python` 而不是 `uv run python`** ——
-> `uv run` 每次都要解析依赖，慢很多，实测有时会卡住。
+> ### 💡 两种运行方式都可以
+>
+> 本文档写的是 `.venv/bin/python xxx.py`，你也可以用 `uv run python xxx.py`，
+> **两者效果完全一样**（都是用同一个 `.venv`）：
+>
+> ```bash
+> .venv/bin/python reset_mlflow.py     # 文档默认写法
+> uv run python reset_mlflow.py        # 等价，随你喜欢
+> ```
+>
+> 实测依赖装好后两者都是 **1 秒**，没有差别。选 `.venv/bin/python` 只是因为它
+> 跳过依赖检查，在以下情况更稳：
+>
+> | 情况 | 建议 |
+> | --- | --- |
+> | 刚 `uv add` 完，依赖是新的 | 都行 |
+> | 改过 `pyproject.toml` | 用 `uv run`，它会自动同步 |
+> | 只想跑脚本，不想等检查 | 用 `.venv/bin/python` |
+>
+> ⚠️ **唯一要避免的写法**是把代码从管道喂给 Python：
+>
+> ```bash
+> uv run python - <<'PYEOF'    # ❌ 会卡住，别这么写
+> ```
+>
+> 一定要**写成 `.py` 文件再执行**。原因见[文末附录](#附录c3-客户端下载为什么跳过)。
 
 ---
 
@@ -1268,7 +1292,9 @@ aws s3 ls                                          # 只剩 wine-dvc-store
 uv run python - <<'PYEOF'    # ❌ 卡在 uv 启动阶段，连 import 都到不了
 ```
 
-要写成文件再执行。依赖装好后直接用 `.venv/bin/python` 更快。
+要写成 `.py` 文件再执行 —— 之后 `uv run python xxx.py` 和
+`.venv/bin/python xxx.py` 都能正常工作（实测都是 1 秒）。
+**问题出在「从管道读代码」这个用法上，不是 `uv run` 本身。**
 
 **② MLflow 3.x 模型不在 run 路径下**
 
