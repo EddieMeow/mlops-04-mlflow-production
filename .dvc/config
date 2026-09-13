@@ -1,0 +1,5 @@
+[core]
+    remote = floci
+['remote "floci"']
+    url = s3://wine-dvc-store-k8s
+    endpointurl = http://localhost.floci.io:4566
