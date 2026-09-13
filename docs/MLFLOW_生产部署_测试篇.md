@@ -152,7 +152,7 @@ for e in c.search_experiments():
 print("✅ 已清空")
 PY
 
-.venv/bin/python reset_mlflow.py
+uv run python reset_mlflow.py
 ```
 
 旧的模型文件也要清掉，否则步骤 5 数出来的对象数会累加：
@@ -190,24 +190,17 @@ psql -h 127.0.0.1 -p 15432 -U $MASTER_USER -d mlflow -t \
 uv add mlflow scikit-learn
 ```
 
-> ### 💡 两种运行方式都可以
+> ### 💡 统一用 `uv run` 运行
 >
-> 本文档写的是 `.venv/bin/python xxx.py`，你也可以用 `uv run python xxx.py`，
-> **两者效果完全一样**（都是用同一个 `.venv`）：
+> 本文档所有 Python 和 DVC 命令都用 `uv run` 开头：
 >
 > ```bash
-> .venv/bin/python reset_mlflow.py     # 文档默认写法
-> uv run python reset_mlflow.py        # 等价，随你喜欢
+> uv run python reset_mlflow.py     # 跑脚本
+> uv run dvc status                 # 跑 DVC
 > ```
 >
-> 实测依赖装好后两者都是 **1 秒**，没有差别。选 `.venv/bin/python` 只是因为它
-> 跳过依赖检查，在以下情况更稳：
->
-> | 情况 | 建议 |
-> | --- | --- |
-> | 刚 `uv add` 完，依赖是新的 | 都行 |
-> | 改过 `pyproject.toml` | 用 `uv run`，它会自动同步 |
-> | 只想跑脚本，不想等检查 | 用 `.venv/bin/python` |
+> `uv run` 会自动确保依赖同步后再执行，不用手动激活虚拟环境。
+> 实测依赖装好后**只要 1 秒**，没有额外开销。
 >
 > ⚠️ **唯一要避免的写法**是把代码从管道喂给 Python：
 >
@@ -256,7 +249,7 @@ PY
 ### 1-2. 运行
 
 ```bash
-.venv/bin/python test_a_train.py
+uv run python test_a_train.py
 ```
 
 **应该看到：**
@@ -539,7 +532,7 @@ PY
 ### 6-2. 运行
 
 ```bash
-.venv/bin/python test_d_registry.py
+uv run python test_d_registry.py
 ```
 
 **应该看到：**
@@ -661,13 +654,13 @@ kubectl port-forward -n mlflow svc/mlflow 5555:80
 
 ```bash
 uv add "dvc[s3]>=3.67.1"
-.venv/bin/dvc --version      # 应输出 3.67.1 或更高
+uv run dvc --version      # 应输出 3.67.1 或更高
 ```
 
 ### 8-2. 初始化
 
 ```bash
-.venv/bin/dvc init
+uv run dvc init
 ```
 
 > 如果提示 `.dvc` 已存在，说明之前初始化过，跳过即可。
@@ -686,10 +679,10 @@ md5 -q data/wine_sample.csv     # 应为 44ad334235b5efb230fdeebf40098383
 ```bash
 aws s3 mb "s3://${DVC_BUCKET}" 2>/dev/null || echo "桶已存在"
 
-.venv/bin/dvc remote add -d -f floci "s3://${DVC_BUCKET}"
-.venv/bin/dvc remote modify floci endpointurl "http://localhost.floci.io:4566"
-.venv/bin/dvc remote modify --local floci access_key_id test
-.venv/bin/dvc remote modify --local floci secret_access_key test
+uv run dvc remote add -d -f floci "s3://${DVC_BUCKET}"
+uv run dvc remote modify floci endpointurl "http://localhost.floci.io:4566"
+uv run dvc remote modify --local floci access_key_id test
+uv run dvc remote modify --local floci secret_access_key test
 ```
 
 确认凭证没进 git：
@@ -714,8 +707,8 @@ git check-ignore -v .dvc/config.local    # 应显示被忽略
 ### 9-1. 跟踪 v1 并上传
 
 ```bash
-.venv/bin/dvc add data/wine_sample.csv
-.venv/bin/dvc push
+uv run dvc add data/wine_sample.csv
+uv run dvc push
 cat data/wine_sample.csv.dvc
 ```
 
@@ -766,8 +759,8 @@ cat >> data/wine_sample.csv <<'CSV'
 8.9,0.62,0.18,3.8,0.176,6
 CSV
 
-.venv/bin/dvc add data/wine_sample.csv
-.venv/bin/dvc push
+uv run dvc add data/wine_sample.csv
+uv run dvc push
 export V2_MD5=$(grep 'md5:' data/wine_sample.csv.dvc | awk '{print $3}')
 
 git add data/wine_sample.csv.dvc
@@ -902,7 +895,7 @@ PY
 ### 10-2. 用 v2 训练（当前磁盘就是 v2）
 
 ```bash
-.venv/bin/python -u train_dvc.py
+uv run python -u train_dvc.py
 ```
 
 **应该看到：**
@@ -917,10 +910,10 @@ rows     : 13   rmse: 0.6832
 
 ```bash
 git checkout "$V1_COMMIT" -- data/wine_sample.csv.dvc
-.venv/bin/dvc checkout data/wine_sample.csv.dvc
+uv run dvc checkout data/wine_sample.csv.dvc
 wc -l data/wine_sample.csv      # 应变回 12 行
 
-.venv/bin/python -u train_dvc.py
+uv run python -u train_dvc.py
 ```
 
 **应该看到：**
@@ -990,7 +983,7 @@ print("rows    :", oldest.data.params["data_rows"])
 print("git     :", oldest.data.tags.get("git_commit"))
 PY
 
-.venv/bin/python -u test_dvc_c.py
+uv run python -u test_dvc_c.py
 ```
 
 **应该看到：**
@@ -1053,7 +1046,7 @@ flowchart RL
 
 ```bash
 echo "9.9,0.99,0.99,9.9,0.999,9" >> data/wine_sample.csv
-.venv/bin/dvc status
+uv run dvc status
 ```
 
 **应该看到 DVC 立刻发现：**
@@ -1067,7 +1060,7 @@ data/wine_sample.csv.dvc:
 ### 12-2. 用被改过的数据训练
 
 ```bash
-.venv/bin/python -u train_dvc.py
+uv run python -u train_dvc.py
 ```
 
 **应该看到警告：**
@@ -1106,8 +1099,8 @@ SQL
 ### 12-4. 恢复数据
 
 ```bash
-.venv/bin/dvc checkout --force data/wine_sample.csv.dvc
-.venv/bin/dvc status      # 应显示 Data and pipelines are up to date.
+uv run dvc checkout --force data/wine_sample.csv.dvc
+uv run dvc status      # 应显示 Data and pipelines are up to date.
 ```
 
 > ### 🔧 为什么要加 `--force`
@@ -1222,7 +1215,7 @@ kubectl delete job wine-dvc-pull -n mlflow
 ### 只清测试数据，保留环境
 
 ```bash
-.venv/bin/python reset_mlflow.py     # 清空实验和模型
+uv run python reset_mlflow.py     # 清空实验和模型
 ```
 
 ### 全部拆掉
@@ -1292,8 +1285,7 @@ aws s3 ls                                          # 只剩 wine-dvc-store
 uv run python - <<'PYEOF'    # ❌ 卡在 uv 启动阶段，连 import 都到不了
 ```
 
-要写成 `.py` 文件再执行 —— 之后 `uv run python xxx.py` 和
-`.venv/bin/python xxx.py` 都能正常工作（实测都是 1 秒）。
+要写成 `.py` 文件再执行 —— `uv run python xxx.py` 就能正常工作（实测 1 秒）。
 **问题出在「从管道读代码」这个用法上，不是 `uv run` 本身。**
 
 **② MLflow 3.x 模型不在 run 路径下**
