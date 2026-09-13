@@ -9,6 +9,8 @@ A plan for adding **DVC data versioning** to the stack built in
   already has a **working DVC + Floci S3 remote**. This plan reuses its conventions and
   extends them into Kubernetes.
 - **Status:** planning only — nothing here has been executed.
+- **UI guide (Chinese):** [MLFLOW_UI_使用指南.md](MLFLOW_UI_使用指南.md) §9 walks through how a
+  data scientist reads this lineage back out of the MLflow interface.
 - **Time:** ~25 minutes on top of the MLflow runbook.
 - **Cost:** $0 (everything local).
 

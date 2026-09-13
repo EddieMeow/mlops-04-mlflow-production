@@ -14,6 +14,8 @@ in PostgreSQL, artifacts in S3. You can destroy every pod and both survive.
 - **Interface:** the ordinary `aws` CLI throughout. Only `AWS_ENDPOINT_URL` differs from real AWS.
 - **Next:** [DVC_DATA_VERSIONING_PLAN.md](DVC_DATA_VERSIONING_PLAN.md) adds data versioning on
   top of this stack, so each run records which dataset version it trained on.
+- **UI guide (Chinese):** [MLFLOW_UI_使用指南.md](MLFLOW_UI_使用指南.md) — how to read and use
+  the MLflow web interface, and how the three documents fit together.
 
 > ### ⚠️ Read this before you start
 >
