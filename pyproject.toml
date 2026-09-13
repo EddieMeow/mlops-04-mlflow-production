@@ -5,6 +5,7 @@ description = "Production MLflow: tracking server, backend store, and model regi
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "dvc[s3]>=3.67.1",
     "mlflow>=3.16.0",
     "scikit-learn>=1.9.1",
 ]
