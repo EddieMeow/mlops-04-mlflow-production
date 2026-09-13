@@ -1,0 +1,7 @@
+[project]
+name = "mlops-04-mlflow-production"
+version = "0.1.0"
+description = "Production MLflow: tracking server, backend store, and model registry"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
